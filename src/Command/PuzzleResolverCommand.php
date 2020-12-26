@@ -56,14 +56,15 @@ class PuzzleResolverCommand extends Command
 
         $output->writeln(sprintf('<info><href=%1$s>%1$s</><info>',$link));
         $output->writeln(sprintf('<info>=========  DAY:  %1$s-%2$s, MODE: %3$s ========= <info>', $year, $day, $isTest?"Test":"Prod"));
-
         if (!\is_callable($callable)) {
             throw new \InvalidArgumentException(sprintf('the main methode of class \\App\\Puzzle\\Year%d\\Day%s is not callable',$year, $day ));
         }
 
         $data = file_get_contents($inputFilePath);
 
+        $startTime = microtime(true);
         $callable(new PuzzleInput($data), $output);
+        $output->writeln('<comment>Execution time: '.(microtime(true) - $startTime).'</comment>');
 
         return Command::SUCCESS;
     }
